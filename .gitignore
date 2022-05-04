@@ -1,0 +1,4 @@
+__pycache__/
+bot.session
+config.py
+main.py
