@@ -1,4 +1,5 @@
 import argparse
+import html
 import re
 
 import pymysql
@@ -47,6 +48,8 @@ async def main():
         date, case, campus, detailzh, detailen = match
         case_list = case.split(' ')
         campus_list = campus.split(' ')
+        detailzh = html.unescape(detailzh)
+        detailen = html.unescape(detailen)
 
         if len(case_list) == 2 and len(campus_list) == 2:
             text = '{date} {campuszh}{casezh} {detailzh}\n{campusen} {caseen}: {detailen}'.format(
