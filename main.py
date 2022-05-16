@@ -4,6 +4,7 @@ import re
 
 import pymysql
 import requests
+from bleach.sanitizer import Cleaner
 from telethon import TelegramClient
 
 from config import (DB_DATABASE, DB_HOST, DB_PASSWORD, DB_USER, tg_api_hash,
@@ -15,6 +16,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--dry-run', action='store_true')
 parser.set_defaults(dry_run=False)
 args = parser.parse_args()
+
+cleaner = Cleaner(tags=[], attributes={}, strip=True)
+
+
+def clean_html(str):
+    return cleaner.clean(html.unescape(str))
 
 
 async def main():
@@ -48,8 +55,8 @@ async def main():
         date, case, campus, detailzh, detailen = match
         case_list = case.split(' ')
         campus_list = campus.split(' ')
-        detailzh = html.unescape(detailzh)
-        detailen = html.unescape(detailen)
+        detailzh = clean_html(detailzh)
+        detailen = clean_html(detailen)
 
         if len(case_list) == 2 and len(campus_list) == 2:
             text = '{date} {campuszh}{casezh} {detailzh}\n{campusen} {caseen}: {detailen}'.format(
